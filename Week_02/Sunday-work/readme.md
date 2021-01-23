@@ -16,6 +16,16 @@ Project中有src 对应目录下有三个练习的HttpServer程序，和一个Ht
 
    用Apache HttpClient 5.0开发的Http client，分别访问三个上述的服务。
 
+   参考： http://hc.apache.org/httpcomponents-client-5.0.x/httpclient5/xref-test/org/apache/hc/client5/http/examples/ClientWithResponseHandler.html
+
+   将上述三个server程序都启动后，执行Requests程序，结果附图如下：
+
+   ![](E:\03-Jennifer\GeekJAVA\Week_02\Sunday-work\java01\Requests-.PNG)
+
+   
+
+   
+
    
 
    
