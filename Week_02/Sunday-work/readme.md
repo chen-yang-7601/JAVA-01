@@ -20,6 +20,8 @@ Project中有src 对应目录下有三个练习的HttpServer程序，和一个Ht
 
    将上述三个server程序都启动后，执行Requests程序，结果附图如下：
 
+   [https://github.com/changanjennifer/JAVA-01/blob/main/Week_02/Sunday-work/java01/Requests-exec-result.PNG](https://github.com/changanjennifer/JAVA-01/blob/main/Week_02/Sunday-work/java01/Requests-exec-result.PNG)
+
    ![](E:\03-Jennifer\GeekJAVA\Week_02\Sunday-work\java01\Requests-exec-result.PNG)
 
    
