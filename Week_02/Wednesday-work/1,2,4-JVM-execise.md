@@ -1,14 +1,15 @@
-# 1. 前言：
+# 1. 概述：
 
 ## 1.1 测试程序说明：
 
-   通过对一个java程序GCLogAnalysis，分析其在不同的GC策略下的运行情况。这个程序在设定的时间内（默认为一秒），随机地创建100K以内的(byte/int/double类型）的随机对象，执行效率以时间范围内生成的对象数量来衡量。
+1.    执行GCLogAnalysis ，分析其在不同的GC策略下的运行情况。这个程序在设定的时间内（默认为一秒），随机地创建100K以内的(byte/int/double类型）的随机对象，执行效率以时间范围内生成的对象数量来衡量。
+2.   对gateway-server-0.0.1-SNAPSHOT.jar (极客时间java训练营讲师提供)做压力测试，观察其在不同GC策略下的性能情况
 
 ## 1.2. 环境说明：
 
   - 机器1： 16G内存，i7-1165G7cpu, WIN10, jdk1.8.0_221-b11,
 
-## 2. 各个GC运行结果
+# 2. GCLogAnalysis 各个GC运行结果
 
 ## 2.1. SerialGC
 
@@ -72,7 +73,7 @@
          2021-01-22T15:31:07.909+0800: 0.949: [GC (Allocation Failure) 2021-01-22T15:31:07.909+0800: 0.949: [DefNew: 314559K->34943K(314560K), 0.0169173 secs] 918100K->712535K(1013632K), 0.0169549 secs] [Times: user=0.01 sys=0.00, real=0.02 secs] 
          2021-01-22T15:31:07.947+0800: 0.987: [GC (Allocation Failure) 2021-01-22T15:31:07.947+0800: 0.987: [DefNew: 314559K->314559K(314560K), 0.0000069 secs]2021-01-22T15:31:07.947+0800: 0.987: [Tenured: 677592K->409258K(699072K), 0.0524603 secs] 992151K->409258K(1013632K), [Metaspace: 2688K->2688K(1056768K)], 0.0525132 secs] [Times: user=0.05 sys=0.00, real=0.05 secs] 
 
-   在1秒内，发生了15次young GC和3次full GC, 其中full GC每次持续约50ms, YoungGC每次大概20ms以内，即因为堆内存小，所以每次执行YoungGC的效率较高，所以整体GC时间约在450ms, JVM的效率略高于2G时。 执行结果是20383次，与2G内存结果相差不大。
+   在1秒内，发生了15次young GC和3次full GC, 其中full GC每次持续约50ms, YoungGC每次大概20ms以内，即因为堆内存小，所以每次执行YoungGC的效率较高，所以整体GC时间约在450ms, JVM的效率略高于2G时。 执行结果是20383次，与2G内存结果相差不大.
 
 ###    将堆内存设为256m时会发生OOM的错误, 错误日志如下(部分)：
 
@@ -309,21 +310,250 @@ CommandLine flags: -XX:InitialHeapSize=4294967296 -XX:MaxGCPauseMillis=50 -XX:Ma
 
    执行结果与没有加此项参数时，无差别。
 
-# 总结&分析
+# 小结
 
  以上各类GC, 在机器1的执行测试程序的结果如下：
 
-| GC类型（执行次数 | 使用内存8G | 内存4G | 内存2G | 内存1G\| | 内存512M |
-| ---------------- | ---------- | ------ | ------ | -------- | -------- |
-| SerialGC         | 18991      | 21861  | 20950  | 20383    | 12305    |
-| CMSGC            | 19116      | 23362  | 21093  | 20067    | 12225    |
-| ParNewGC         | 22992      | 20498  | 20695  | 20260    | 12377    |
-| ParallelGC       | 23672      | 28967  | 25305  | 22592    | 10747    |
-| G1GC             | 26691      | 25046  | 23110  | 22592    | 12786    |
+| GC类型（执行次数 | 使用内存8G | 内存4G | 内存2G | 内存1G | 内存512M |
+| ---------------- | ---------- | ------ | ------ | ------ | -------- |
+| SerialGC         | 18991      | 21861  | 20950  | 20383  | 12305    |
+| CMSGC            | 19116      | 23362  | 21093  | 20067  | 12225    |
+| ParNewGC         | 22992      | 20498  | 20695  | 20260  | 12377    |
+| ParallelGC       | 23672      | 28967  | 25305  | 22592  | 10747    |
+| G1GC             | 26691      | 25046  | 23110  | 22592  | 12786    |
 
-
+所有GC,在256M的堆内存下，都会OOM, 
 
 在JDK8下，针对本次的测试问题，G1GC增大堆内存能提升性能。
 Serial，CMS在小内存下（1g, 2g)的性能较好，性价比较高。
 在大内存下，G1GC性能向好。
 整体而言，就这个测试问题，在jdk8下，ParallelGC性能最佳，G1GC次之。
+
+# 3. gateway-server-0.0.1-SNAPSHOT.jar  各个GC运行结果
+
+## 3.1  SerialGC
+
+### 启动gateway-server-0.0.1-SNAPSHOT.jar （-Xmx1g)
+
+```
+PS D:\tech\geek> java -Xmx1g -Xms1g -XX:-UseAdaptiveSizePolicy -XX:+UseSerialGC -XX:+PrintGC -jar gateway-server-0.0.1-SNAPSHOT.jar
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::        (v2.0.4.RELEASE)
+
+[Full GC (Metadata GC Threshold)  251765K->14369K(1013632K), 0.0428646 secs]
+[GC (Allocation Failure)  293985K->30598K(1013632K), 0.0200749 secs]
+[Full GC (Metadata GC Threshold)  157512K->29041K(1013632K), 0.0555108 secs]
+启动后，发生了1次young GC, 2次full GC (42ms和55ms)
+```
+
+### 执行压测
+
+```
+PS D:\tech\geek> sb -u http://localhost:8088/api/hello -c 10 -n 100000
+Starting at 2021/1/23 22:22:38
+[Press C to stop the test]
+99997   (RPS: 10427.2)
+---------------Finished!----------------
+Finished at 2021/1/23 22:22:48 (took 00:00:09.7851222)
+Status 200:    100000
+
+RPS: 9298.3 (requests/second)
+Max: 111ms
+Min: 0ms
+Avg: 0ms
+```
+
+   后来执行多次压测，RPS有所提升，第二次：11459， 第三次：11354， 
+
+### 压测后的GC日志
+
+```
+[GC (Allocation Failure)  308838K->31441K(1013632K), 0.0049536 secs]
+[GC (Allocation Failure)  311057K->30845K(1013632K), 0.0030256 secs]
+[GC (Allocation Failure)  310461K->30836K(1013632K), 0.0028444 secs]
+[GC (Allocation Failure)  310452K->30860K(1013632K), 0.0028400 secs]
+[GC (Allocation Failure)  310476K->30861K(1013632K), 0.0027955 secs]
+[GC (Allocation Failure)  310477K->30848K(1013632K), 0.0027814 secs]
+[GC (Allocation Failure)  310464K->30846K(1013632K), 0.0027984 secs]
+[GC (Allocation Failure)  310462K->30850K(1013632K), 0.0029929 secs]
+[GC (Allocation Failure)  310466K->30848K(1013632K), 0.0028667 secs]
+```
+
+多次执行压测，均没有发生full GC,表明这个应用在1G堆内存下，运行是比较健康的。 
+
+## 3.2  CMS GC
+
+```
+PS D:\tech\geek> java -Xmx1g -Xms1g -XX:-UseAdaptiveSizePolicy -XX:+UseConcMarkSweepGC -XX:+PrintGC -jar gateway-server-0.0.1-SNAPSHOT.jar
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::        (v2.0.4.RELEASE)
+
+[GC (Allocation Failure)  279616K->15385K(1013632K), 0.0093529 secs]
+[GC (CMS Initial Mark)  19523K(1013632K), 0.0012902 secs]
+[GC (CMS Final Remark)  161213K(1013632K), 0.0118502 secs]
+[GC (Allocation Failure)  295001K->25221K(1013632K), 0.0091161 secs]
+```
+
+发生了full Gc
+
+### 执行压测
+
+```
+PS D:\tech\geek> sb -u http://localhost:8088/api/hello -c 10 -n 100000
+Starting at 2021/1/23 22:19:14
+[Press C to stop the test]
+100000  (RPS: 10548.5)
+---------------Finished!----------------
+Finished at 2021/1/23 22:19:24 (took 00:00:09.6689792)
+Status 200:    100000
+
+RPS: 9394.5 (requests/second)
+Max: 108ms
+Min: 0ms
+Avg: 0ms
+```
+
+压测后GC情况
+
+```
+[GC (Allocation Failure)  304837K->25913K(1013632K), 0.0170360 secs]
+[GC (Allocation Failure)  305529K->24699K(1013632K), 0.0054650 secs]
+[GC (Allocation Failure)  304315K->22744K(1013632K), 0.0048590 secs]
+[GC (Allocation Failure)  302360K->22663K(1013632K), 0.0048355 secs]
+[GC (Allocation Failure)  302279K->21088K(1013632K), 0.0050899 secs]
+[GC (Allocation Failure)  300704K->27608K(1013632K), 0.0086747 secs]
+[GC (Allocation Failure)  307224K->22201K(1013632K), 0.0044603 secs]
+[GC (Allocation Failure)  301817K->19296K(1013632K), 0.0038297 secs]
+[GC (Allocation Failure)  298912K->18568K(1013632K), 0.0037147 secs]
+```
+
+## 3.3 ParallelGC
+
+```
+PS D:\tech\geek> java -Xmx1g -Xms1g -XX:-UseAdaptiveSizePolicy -XX:+UseParallelGC -XX:+PrintGC -jar gateway-server-0.0.1-SNAPSHOT.jar
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::        (v2.0.4.RELEASE)
+
+[GC (Metadata GC Threshold)  256923K->15478K(1005056K), 0.0081733 secs]
+[Full GC (Metadata GC Threshold)  15478K->14680K(1005056K), 0.0174408 secs]
+[GC (Allocation Failure)  276824K->30966K(1005056K), 0.0076579 secs]
+[GC (Metadata GC Threshold)  174842K->30292K(1005056K), 0.0071460 secs]
+[Full GC (Metadata GC Threshold)  30292K->20383K(1005056K), 0.0329619 secs]
+
+```
+
+因为MetaSpace Threshold 15M太小, 引发2次full GC。
+
+### 执行压测
+
+```
+PS D:\tech\geek> sb -u http://localhost:8088/api/hello -c 10 -n 100000
+Starting at 2021/1/23 22:30:10
+[Press C to stop the test]
+100000  (RPS: 10737.7)
+---------------Finished!----------------
+Finished at 2021/1/23 22:30:19 (took 00:00:09.4349797)
+Status 200:    100000
+
+RPS: 9610 (requests/second)
+Max: 142ms
+Min: 0ms
+Avg: 0ms
+```
+
+压测后没有发生full GC，
+
+尝试加大堆内存，启动时，仍然会因为Metaspace Threshold问题发生full GC,  猜测该应用应该是启动阶段要加载大量对象，默认的ParallelGC的15M Metaspace不够，**需要增加对Metaspace的空间设定参数 -XX:MetaspaceSize=256m** 
+
+### 增加XX:MetaspaceSize选项后，
+
+```
+PS D:\tech\geek> java -Xmx1g -Xms1g -XX:-UseAdaptiveSizePolicy -XX:+UseParallelGC  -XX:MetaspaceSize=256m -XX:+PrintGC -jar gateway-server-0.0.1-SNAPSHOT.jar
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::        (v2.0.4.RELEASE)
+
+[GC (Allocation Failure)  262144K->15580K(1005056K), 0.0106731 secs]
+[GC (Allocation Failure)  277724K->21137K(1005056K), 0.0099844 secs]
+```
+
+程序启动时，没有发生full GC
+
+再次执行压测后，仍然没有发生full GC, RPS 为9077，并没有明显的性能下降。
+
+## 3.4 G1GC
+
+在不设定  MetaspaceSize的情况下，启动时G1GC也会发生fullGC, 直接加上此项参数
+
+```
+PS D:\tech\geek> java -Xmx1g -Xms1g -XX:-UseAdaptiveSizePolicy -XX:+UseG1GC -XX:MetaspaceSize=256m -XX:+PrintGC -jar gateway-server-0.0.1-SNAPSHOT.jar
+[GC pause (G1 Evacuation Pause) (young) 51M->4419K(1024M), 0.0028071 secs]
+[GC pause (G1 Evacuation Pause) (young) 62M->8233K(1024M), 0.0039264 secs]
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::        (v2.0.4.RELEASE)
+```
+
+没有发生full GC
+
+### 执行压测
+
+```
+PS D:\tech\geek> sb -u http://localhost:8088/api/hello -c 10 -n 100000
+Starting at 2021/1/23 22:56:59
+[Press C to stop the test]
+99999   (RPS: 10343.3)
+---------------Finished!----------------
+Finished at 2021/1/23 22:57:09 (took 00:00:09.8646593)
+Status 200:    100000
+
+RPS: 9245.6 (requests/second)
+Max: 146ms
+Min: 0ms
+Avg: 0.1ms
+```
+
+压测后没有发生full GC
+
+# 4 总结&分析
+
+1. 在大内存的应用时，尽量选用G1GC或ParallelGC. 
+2. 但堆内存并非越大越好，（参见表1)，当堆内存较大时，每次YoungGC的时间过长，造成总体吞吐量下降。
+3. 要综合应用多种内存分析工具，具体应用具体分析，分析分配速率与回收速率之间的关系，尽量使得系统分配速率与回收速率相匹配。
+4. 根据提升速率分析是否有过快提升到老年代，从而引发系统效能下降。
+5. 分析时，要结合业务场景才能更快定位问题。
+
+
+
+
+
+
+
