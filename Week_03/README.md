@@ -2,7 +2,7 @@
 
 ## 作业说明：
 
-参考老师提供的模板程序，
+参考老师提供的模板程序, 完成了周三及周日的作业(必做)，程序目录: [netty&httpclient5](https://github.com/changanjennifer/JAVA-01/tree/main/Week_03/netty%26httpclient5)/[src](https://github.com/changanjennifer/JAVA-01/tree/main/Week_03/netty%26httpclient5/src)/[main](https://github.com/changanjennifer/JAVA-01/tree/main/Week_03/netty%26httpclient5/src/main)/[java](https://github.com/changanjennifer/JAVA-01/tree/main/Week_03/netty%26httpclient5/src/main/java)/[com](https://github.com/changanjennifer/JAVA-01/tree/main/Week_03/netty%26httpclient5/src/main/java/com)/[yhh](https://github.com/changanjennifer/JAVA-01/tree/main/Week_03/netty%26httpclient5/src/main/java/com/yhh)/**nio2**/
 
 ### 1. 周三作业：（必做）整合上次作业的httpclient， 实现Netty服务器端与httpClient5整合
 
