@@ -1,16 +1,22 @@
-1. Netty服务器端与httpClient5整合
 
-   采用Netty推荐的主从Reactor 模式.
 
-   Accpetor : 监听并接收客户端的请求，并将请求转发给Handler
+## 作业说明：
 
-   Handler: 一般是一个线程池进行后续I/O、编解码及相关处理
+参考老师提供的模板程序，
 
-   
+### 1. 周三作业：（必做）整合上次作业的httpclient， 实现Netty服务器端与httpClient5整合
 
-   因为apacha HttpClient5与HttpClient4有较大的语法差异，即便参考老师的模板程序，花费时间也较多。
+采用Netty推荐的主从Reactor 模式.
 
-​     2.  添加router 与filter.
+Accpetor : 监听并接收客户端的请求，并将请求转发给Handler
+
+Handler: 一般是一个线程池进行后续I/O、编解码及相关处理
+
+
+
+因为apacha HttpClient5与HttpClient4有较大的语法差异，即便参考老师的模板程序，花费时间也较多。
+
+### 2. 周日作业：（必做）实现过滤器      添加router 与filter.
 
 ​        执行结果
 
@@ -56,4 +62,3 @@ java.io.IOException: 远程主机强迫关闭了一个现有的连接。
 	at io.netty.channel.socket.nio.NioSocketChannel.doReadBytes(NioSocketChannel.java:350)
 ```
 
-学习笔记
