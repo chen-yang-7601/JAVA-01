@@ -23,7 +23,7 @@
    之后插入100万笔订单simpleorders，这些订单资料生成时，会从1万客户中，随机选择一个，并从10万种商品中，随机选择一种商品。(10万商品资料会先查询并cache起来)
    ```
 
-   ###### 新增订单资料， 程序为  GenerateOrders.java  资料时， 
+   ###### 新增100万笔订单资料的程序为  com.yhh.ecommerce.GenerateOrders.java  ， 
 
    采用Preparestatement 编译插入的SQL ,用单笔执行方式,耗时 549s, 约9分钟左右：
 
