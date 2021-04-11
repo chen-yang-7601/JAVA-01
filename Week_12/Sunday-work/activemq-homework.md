@@ -17,7 +17,7 @@
 
 从activemq的控制台，可以看到Quque的生产和消费情况
 
-![test.Queue.png](https://github.com/changanjennifer/JAVA-01/blob/main/Week_12/Sunday-work/test.Queue.png)
+![https://github.com/changanjennifer/JAVA-01/blob/main/Week_12/Sunday-work/test.Queue.png](https://github.com/changanjennifer/JAVA-01/blob/main/Week_12/Sunday-work/test.Queue.png)
 
 
 
