@@ -22,3 +22,4 @@ typora-root-url: images
 
 ​      ![https://github.com/changanjennifer/JAVA-01/tree/main/Summary/images/JVM-summary.png](https://github.com/changanjennifer/JAVA-01/tree/main/Summary/images/JVM-summary.png)
 
+​      ![https://github.com/changanjennifer/JAVA-01/tree/main/Summary/images/JVM-summary.png](https://github.com/changanjennifer/JAVA-01/blob/main/Summary/images/JVM-summary.png)
