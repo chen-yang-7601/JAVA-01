@@ -1,3 +1,7 @@
+---
+typora-root-url: images
+---
+
 ### JVM 总结
 
 ​      Java从诞生之初，其关键点和设计思想是：一次编写，到处执行。JVM(java virtual machine)是Java程序运行的虚拟机平台，与Java支持库一期构成了Java程序的执行环境。JVM隔离了硬件平台与操作系统的差异，使得Java程序具备了跨平台执行的能力。因此，推测JVM的主要职责应该要具有如下的职责：
@@ -16,5 +20,5 @@
 
 ​      在实际应用中，为了更好的服务于应用，提升运行效率，各个JDK提供一些JVM工具，而人们也从原理和实践角度给出了JVM参数管理、性能调优的参考。 JVM的一些知识点的整理如下图:
 
-​      ![https://github.com/changanjennifer/JAVA-01/tree/main/Summary/images/JVM-summary.png]()
+​      ![images/JVM-summary.png](E:\03-Jennifer\GeekJAVA\Summary\images\JVM-summary.png)
 
